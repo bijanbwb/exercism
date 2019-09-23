@@ -8,11 +8,7 @@ defmodule RnaTranscription do
   'UGAC'
   """
   @spec to_rna([char]) :: [char]
-  def to_rna(dna) do
-    dna
-    |> Enum.map(&transcribe_nucleotide/1)
-    |> to_charlist()
-  end
+  def to_rna(dna), do: Enum.map(dna, &transcribe_nucleotide/1)
 
   @spec transcribe_nucleotide(char) :: char
   defp transcribe_nucleotide(?G), do: ?C
