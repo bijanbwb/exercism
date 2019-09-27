@@ -1,11 +1,5 @@
 module Bob exposing (hey)
 
--- IMPORTS
-
-import Regex
-
-
-
 -- TYPES
 
 
@@ -63,16 +57,13 @@ stringToRemark string =
 
 
 isAsking : String -> Bool
-isAsking string =
-    string
-        |> String.trim
-        |> String.endsWith "?"
+isAsking =
+    String.trim >> String.endsWith "?"
 
 
 isShouting : String -> Bool
 isShouting string =
-    hasLetters string
-        && (String.toUpper string == string)
+    hasLetters string && (String.toUpper string == string)
 
 
 isSilent : String -> Bool
@@ -82,10 +73,4 @@ isSilent =
 
 hasLetters : String -> Bool
 hasLetters =
-    let
-        letters =
-            "[A-Za-z]"
-                |> Regex.fromString
-                |> Maybe.withDefault Regex.never
-    in
-    Regex.contains letters
+    String.any Char.isAlpha
