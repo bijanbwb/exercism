@@ -1,7 +1,5 @@
 module Bob exposing (hey)
 
--- TYPES
-
 
 type Remark
     = Asking
@@ -9,10 +7,6 @@ type Remark
     | Shouting
     | Silent
     | Statement
-
-
-
--- SOLUTION
 
 
 hey : String -> String
@@ -34,26 +28,23 @@ hey string =
             "Whatever."
 
 
-
--- HELPERS
-
-
 stringToRemark : String -> Remark
 stringToRemark string =
-    if isAsking string && isShouting string then
-        AskingAndShouting
+    case ( isAsking string, isShouting string, isSilent string ) of
+        ( True, True, _ ) ->
+            AskingAndShouting
 
-    else if isAsking string then
-        Asking
+        ( True, _, _ ) ->
+            Asking
 
-    else if isShouting string then
-        Shouting
+        ( _, True, _ ) ->
+            Shouting
 
-    else if isSilent string then
-        Silent
+        ( _, _, True ) ->
+            Silent
 
-    else
-        Statement
+        _ ->
+            Statement
 
 
 isAsking : String -> Bool
