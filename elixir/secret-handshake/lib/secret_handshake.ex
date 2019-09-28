@@ -1,31 +1,29 @@
 defmodule SecretHandshake do
-  @doc """
-  Determine the actions of a secret handshake based on the binary
-  representation of the given `code`.
-
-  If the following bits are set, include the corresponding action in your list
-  of commands, in order from lowest to highest.
-
-  1 = wink
-  10 = double blink
-  100 = close your eyes
-  1000 = jump
-
-  10000 = Reverse the order of the operations in the secret handshake
-  """
   @spec commands(code :: integer) :: list(String.t())
   def commands(code) do
-    code
-    |> Integer.digits(2)
+    binary_digits = Integer.digits(code, 2)
+
+    case check_reverse_bit(binary_digits) do
+      true -> binary_digits |> generate_handshake() |> Enum.reverse()
+      false -> binary_digits |> generate_handshake()
+    end
+  end
+
+  @spec generate_handshake([0 | 1]) :: [String.t()]
+  defp generate_handshake(binary_digits) do
+    binary_digits
     |> Enum.reverse()
     |> Enum.zip(1..5)
     |> Enum.map(&bit_translation/1)
     |> Enum.reject(&is_nil/1)
-
-    # TODO: If position 5 is 1, reverse list
   end
 
-  @spec bit_translation({0 | 1, 1..5}) :: (integer -> String.t()) | nil
+  @spec check_reverse_bit([0 | 1]) :: boolean
+  defp check_reverse_bit(binary_digits) do
+    Enum.count(binary_digits) == 5 and Enum.at(binary_digits, 0) == 1
+  end
+
+  @spec bit_translation({0 | 1, 1..5}) :: nil | (integer -> String.t())
   defp bit_translation({bit_value, position}) do
     case bit_value do
       0 -> nil
