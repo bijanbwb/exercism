@@ -18,7 +18,7 @@ isLeapYear year =
 
 yearCategory : Int -> YearCategory
 yearCategory year =
-    case ( isDivisibleBy year 400, isDivisibleBy year 100, isDivisibleBy year 4 ) of
+    case ( isDivisibleBy 400 year, isDivisibleBy 100 year, isDivisibleBy 4 year ) of
         ( True, True, _ ) ->
             LeapYear
 
@@ -33,5 +33,5 @@ yearCategory year =
 
 
 isDivisibleBy : Int -> Int -> Bool
-isDivisibleBy year int =
-    modBy int year == 0
+isDivisibleBy int =
+    modBy int >> (==) 0
