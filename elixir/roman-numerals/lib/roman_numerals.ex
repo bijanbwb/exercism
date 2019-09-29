@@ -18,72 +18,120 @@ defmodule RomanNumerals do
   numeral.
   """
   @spec numeral(pos_integer) :: String.t()
-  def numeral(number), do: add_thousands(number, "")
+  def numeral(number) do
+    add_thousands(number, "")
+  end
+
+  # 1000s (M)
 
   @spec add_thousands(pos_integer, String.t()) :: String.t()
   def add_thousands(number, string) when number in 1000..@maximum_input do
-    string <> String.duplicate("M", div(number, 1000)) <> add_hundreds(rem(number, 1000), string)
+    thousands = div(number, 1000)
+    remainder = rem(number, 1000)
+    string <> String.duplicate("M", thousands) <> add_five_hundreds(remainder, string)
   end
 
   def add_thousands(number, string) when number in 900..999 do
-    string <> "CM" <> add_fifties(rem(number, 900), string)
+    remainder = rem(number, 900)
+    string <> "CM" <> add_five_hundreds(remainder, string)
   end
 
-  def add_thousands(number, string), do: add_five_hundreds(number, string)
+  def add_thousands(number, string) do
+    add_five_hundreds(number, string)
+  end
 
+  # 500s (D)
   @spec add_five_hundreds(pos_integer, String.t()) :: String.t()
   def add_five_hundreds(number, string) when number in 500..899 do
-    string <> "D" <> add_hundreds(rem(number, 500), string)
+    remainder = rem(number, 500)
+    string <> "D" <> add_hundreds(remainder, string)
   end
 
   def add_five_hundreds(number, string) when number in 400..499 do
-    string <> "CD" <> add_fifties(rem(number, 400), string)
+    remainder = rem(number, 400)
+    string <> "CD" <> add_hundreds(remainder, string)
   end
 
-  def add_five_hundreds(number, string), do: add_hundreds(number, string)
+  def add_five_hundreds(number, string) do
+    add_hundreds(number, string)
+  end
+
+  # 100s (C)
 
   @spec add_hundreds(pos_integer, String.t()) :: String.t()
   def add_hundreds(number, string) when number in 100..399 do
-    string <> String.duplicate("C", div(number, 100)) <> add_fifties(rem(number, 100), string)
+    hundreds = div(number, 100)
+    remainder = rem(number, 100)
+    string <> String.duplicate("C", hundreds) <> add_fifties(remainder, string)
   end
 
   def add_hundreds(number, string) when number in 90..99 do
-    string <> "XC" <> add_fives(rem(number, 90), string)
+    remainder = rem(number, 90)
+    string <> "XC" <> add_fifties(remainder, string)
   end
 
-  def add_hundreds(number, string), do: add_fifties(number, string)
+  def add_hundreds(number, string) do
+    add_fifties(number, string)
+  end
+
+  # 50s (L)
 
   @spec add_fifties(pos_integer, String.t()) :: String.t()
   def add_fifties(number, string) when number in 50..89 do
-    string <> "L" <> add_tens(rem(number, 50), string)
+    remainder = rem(number, 50)
+    string <> "L" <> add_tens(remainder, string)
   end
 
   def add_fifties(number, string) when number in 40..49 do
-    string <> "XL" <> add_fives(rem(number, 10), string)
+    remainder = rem(number, 40)
+    string <> "XL" <> add_tens(remainder, string)
   end
 
-  def add_fifties(number, string), do: add_tens(number, string)
+  def add_fifties(number, string) do
+    add_tens(number, string)
+  end
+
+  # 100s (X)
 
   @spec add_tens(pos_integer, String.t()) :: String.t()
   def add_tens(number, string) when number in 10..39 do
-    string <> String.duplicate("X", div(number, 10)) <> add_tens(rem(number, 10), string)
+    tens = div(number, 10)
+    remainder = rem(number, 10)
+    string <> String.duplicate("X", tens) <> add_tens(remainder, string)
   end
 
-  def add_tens(number, string) when number in 9..9, do: string <> "IX"
-  def add_tens(number, string), do: add_fives(number, string)
+  def add_tens(number, string) when number in 9..9 do
+    string <> "IX" <> add_fives(number, string)
+  end
+
+  def add_tens(number, string) do
+    add_fives(number, string)
+  end
+
+  # 5s (V)
 
   @spec add_fives(pos_integer, String.t()) :: String.t()
   def add_fives(number, string) when number in 5..8 do
-    string <> "V" <> add_ones(rem(number, 5), string)
+    remainder = rem(number, 5)
+    string <> "V" <> add_ones(remainder, string)
   end
 
-  def add_fives(number, string) when number in 4..4, do: string <> "IV"
-  def add_fives(number, string), do: add_ones(number, string)
+  def add_fives(number, string) when number in 4..4 do
+    string <> "IV" <> add_ones(number, string)
+  end
+
+  def add_fives(number, string) do
+    add_ones(number, string)
+  end
+
+  # 1s (I)
 
   @spec add_ones(pos_integer, String.t()) :: String.t()
   def add_ones(number, string) when number in 1..3 do
     string <> String.duplicate("I", number)
   end
 
-  def add_ones(_number, string), do: string
+  def add_ones(_number, string) do
+    string
+  end
 end

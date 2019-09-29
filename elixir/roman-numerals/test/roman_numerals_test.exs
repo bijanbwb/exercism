@@ -129,6 +129,10 @@ defmodule RomanNumeralsTest do
     assert RomanNumerals.numeral(1024) == "MXXIV"
   end
 
+  test "1666" do
+    assert RomanNumerals.numeral(1666) == "MDCLXVI"
+  end
+
   test "3000" do
     assert RomanNumerals.numeral(3000) == "MMM"
   end
