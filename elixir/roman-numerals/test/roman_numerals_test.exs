@@ -45,19 +45,32 @@ defmodule RomanNumeralsTest do
     assert RomanNumerals.numeral(11) == "XI"
   end
 
-  @tag :pending
   test "14" do
     assert RomanNumerals.numeral(14) == "XIV"
   end
 
-  @tag :pending
   test "15" do
     assert RomanNumerals.numeral(15) == "XV"
   end
 
-  @tag :pending
+  test "18" do
+    assert RomanNumerals.numeral(18) == "XVIII"
+  end
+
+  test "19" do
+    assert RomanNumerals.numeral(19) == "XIX"
+  end
+
+  test "20" do
+    assert RomanNumerals.numeral(20) == "XX"
+  end
+
   test "27" do
     assert RomanNumerals.numeral(27) == "XXVII"
+  end
+
+  test "30" do
+    assert RomanNumerals.numeral(30) == "XXX"
   end
 
   @tag :pending

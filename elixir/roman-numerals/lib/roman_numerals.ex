@@ -10,12 +10,10 @@ defmodule RomanNumerals do
 
   @spec add_ones(pos_integer, String.t()) :: String.t()
   def add_ones(number, string) when number in 1..3 do
-    Enum.reduce(1..number, string, fn _n, acc -> acc <> "I" end)
+    string <> String.duplicate("I", number)
   end
 
-  def add_ones(_number, string) do
-    string
-  end
+  def add_ones(_number, string), do: string
 
   @spec add_fives(pos_integer, String.t()) :: String.t()
   def add_fives(number, string) when number in 4..8 do
@@ -25,19 +23,17 @@ defmodule RomanNumerals do
     end
   end
 
-  def add_fives(number, string) do
-    add_ones(number, string)
-  end
+  def add_fives(number, string), do: add_ones(number, string)
 
   @spec add_tens(pos_integer, String.t()) :: String.t()
-  def add_tens(number, string) when number in 9..13 do
+  def add_tens(number, string) when number in 9..39 do
+    tens = div(number, 10)
+
     case number do
       9 -> string <> "IX"
-      _10 -> string <> "X" <> add_fives(rem(number, 10), string)
+      _10 -> string <> String.duplicate("X", tens) <> add_tens(rem(number, 10), string)
     end
   end
 
-  def add_tens(number, string) do
-    add_fives(number, string)
-  end
+  def add_tens(number, string), do: add_fives(number, string)
 end
