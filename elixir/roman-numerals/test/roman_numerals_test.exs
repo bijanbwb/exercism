@@ -73,19 +73,33 @@ defmodule RomanNumeralsTest do
     assert RomanNumerals.numeral(30) == "XXX"
   end
 
-  @tag :pending
   test "48" do
     assert RomanNumerals.numeral(48) == "XLVIII"
   end
 
-  @tag :pending
+  test "50" do
+    assert RomanNumerals.numeral(50) == "L"
+  end
+
   test "59" do
     assert RomanNumerals.numeral(59) == "LIX"
+  end
+
+  test "80" do
+    assert RomanNumerals.numeral(80) == "LXXX"
+  end
+
+  test "90" do
+    assert RomanNumerals.numeral(90) == "XC"
   end
 
   @tag :pending
   test "93" do
     assert RomanNumerals.numeral(93) == "XCIII"
+  end
+
+  test "100" do
+    assert RomanNumerals.numeral(100) == "C"
   end
 
   @tag :pending

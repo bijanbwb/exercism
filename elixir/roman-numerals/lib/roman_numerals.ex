@@ -4,8 +4,7 @@ defmodule RomanNumerals do
   """
   @spec numeral(pos_integer) :: String.t()
   def numeral(number) do
-    number
-    |> add_tens("")
+    add_hundreds(number, "")
   end
 
   @spec add_ones(pos_integer, String.t()) :: String.t()
@@ -36,4 +35,27 @@ defmodule RomanNumerals do
   end
 
   def add_tens(number, string), do: add_fives(number, string)
+
+  @spec add_fifties(pos_integer, String.t()) :: String.t()
+  def add_fifties(number, string) when number in 40..49 do
+    string <> "XL" <> add_tens(rem(number, 10), string)
+  end
+
+  def add_fifties(number, string) when number in 50..89 do
+    string <> "L" <> add_tens(rem(number, 50), string)
+  end
+
+  def add_fifties(number, string), do: add_tens(number, string)
+
+  @spec add_hundreds(pos_integer, String.t()) :: String.t()
+  def add_hundreds(number, string) when number in 90..899 do
+    hundreds = div(number, 100)
+
+    case number do
+      90 -> string <> "XC"
+      _100 -> string <> String.duplicate("C", hundreds) <> add_hundreds(rem(number, 100), string)
+    end
+  end
+
+  def add_hundreds(number, string), do: add_fifties(number, string)
 end
