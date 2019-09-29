@@ -97,6 +97,10 @@ defmodule RomanNumeralsTest do
     assert RomanNumerals.numeral(93) == "XCIII"
   end
 
+  test "96" do
+    assert RomanNumerals.numeral(96) == "XCVI"
+  end
+
   test "100" do
     assert RomanNumerals.numeral(100) == "C"
   end
