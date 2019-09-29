@@ -4,7 +4,7 @@ defmodule RomanNumerals do
   """
   @spec numeral(pos_integer) :: String.t()
   def numeral(number) do
-    add_hundreds(number, "")
+    add_thousands(number, "")
   end
 
   @spec add_ones(pos_integer, String.t()) :: String.t()
@@ -48,14 +48,37 @@ defmodule RomanNumerals do
   def add_fifties(number, string), do: add_tens(number, string)
 
   @spec add_hundreds(pos_integer, String.t()) :: String.t()
-  def add_hundreds(number, string) when number in 90..899 do
-    hundreds = div(number, 100)
+  def add_hundreds(number, string) when number in 90..99 do
+    string <> "XC" <> add_ones(rem(number, 90), string)
+  end
 
-    case number do
-      90 -> string <> "XC"
-      _100 -> string <> String.duplicate("C", hundreds) <> add_hundreds(rem(number, 100), string)
-    end
+  def add_hundreds(number, string) when number in 100..399 do
+    hundreds = div(number, 100)
+    string <> String.duplicate("C", hundreds) <> add_hundreds(rem(number, 100), string)
   end
 
   def add_hundreds(number, string), do: add_fifties(number, string)
+
+  @spec add_five_hundreds(pos_integer, String.t()) :: String.t()
+  def add_five_hundreds(number, string) when number in 400..499 do
+    string <> "CD" <> add_fifties(rem(number, 400), string)
+  end
+
+  def add_five_hundreds(number, string) when number in 500..899 do
+    string <> "D" <> add_hundreds(rem(number, 500), string)
+  end
+
+  def add_five_hundreds(number, string), do: add_hundreds(number, string)
+
+  @spec add_thousands(pos_integer, String.t()) :: String.t()
+  def add_thousands(number, string) when number in 900..999 do
+    string <> "CM" <> add_fifties(rem(number, 900), string)
+  end
+
+  def add_thousands(number, string) when number in 1000..3000 do
+    thousands = div(number, 1000)
+    string <> String.duplicate("M", thousands) <> add_hundreds(rem(number, 1000), string)
+  end
+
+  def add_thousands(number, string), do: add_five_hundreds(number, string)
 end

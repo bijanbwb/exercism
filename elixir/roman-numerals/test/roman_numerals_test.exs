@@ -93,7 +93,6 @@ defmodule RomanNumeralsTest do
     assert RomanNumerals.numeral(90) == "XC"
   end
 
-  @tag :pending
   test "93" do
     assert RomanNumerals.numeral(93) == "XCIII"
   end
@@ -102,37 +101,30 @@ defmodule RomanNumeralsTest do
     assert RomanNumerals.numeral(100) == "C"
   end
 
-  @tag :pending
   test "141" do
     assert RomanNumerals.numeral(141) == "CXLI"
   end
 
-  @tag :pending
   test "163" do
     assert RomanNumerals.numeral(163) == "CLXIII"
   end
 
-  @tag :pending
   test "402" do
     assert RomanNumerals.numeral(402) == "CDII"
   end
 
-  @tag :pending
   test "575" do
     assert RomanNumerals.numeral(575) == "DLXXV"
   end
 
-  @tag :pending
   test "911" do
     assert RomanNumerals.numeral(911) == "CMXI"
   end
 
-  @tag :pending
   test "1024" do
     assert RomanNumerals.numeral(1024) == "MXXIV"
   end
 
-  @tag :pending
   test "3000" do
     assert RomanNumerals.numeral(3000) == "MMM"
   end
