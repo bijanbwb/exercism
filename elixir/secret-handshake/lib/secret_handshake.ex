@@ -3,42 +3,29 @@ defmodule SecretHandshake do
   def commands(code) do
     binary_digits = Integer.digits(code, 2)
 
-    case check_reverse_bit(binary_digits) do
-      true -> binary_digits |> generate_handshake() |> Enum.reverse()
-      false -> binary_digits |> generate_handshake()
-    end
-  end
-
-  @spec generate_handshake([0 | 1]) :: [String.t()]
-  defp generate_handshake(binary_digits) do
     binary_digits
     |> Enum.reverse()
     |> Enum.zip(1..5)
     |> Enum.map(&bit_translation/1)
     |> Enum.reject(&is_nil/1)
-  end
-
-  @spec check_reverse_bit([0 | 1]) :: boolean
-  defp check_reverse_bit(binary_digits) do
-    Enum.count(binary_digits) == 5 and Enum.at(binary_digits, 0) == 1
+    |> reversal(binary_digits)
   end
 
   @spec bit_translation({0 | 1, 1..5}) :: nil | (integer -> String.t())
-  defp bit_translation({bit_value, position}) do
-    case bit_value do
-      0 -> nil
-      1 -> translate(position)
-    end
-  end
+  defp bit_translation({bit_value, position}) when bit_value == 1, do: translate(position)
+  defp bit_translation(_tuple), do: nil
 
   @spec translate(integer) :: String.t()
-  defp translate(position) do
-    case position do
-      1 -> "wink"
-      2 -> "double blink"
-      3 -> "close your eyes"
-      4 -> "jump"
-      5 -> nil
-    end
+  defp translate(position) when position == 1, do: "wink"
+  defp translate(position) when position == 2, do: "double blink"
+  defp translate(position) when position == 3, do: "close your eyes"
+  defp translate(position) when position == 4, do: "jump"
+  defp translate(_position), do: nil
+
+  @spec reversal(list(String.t()), list(0 | 1)) :: list(String.t())
+  defp reversal(translated_list, [1 | tail]) when length(tail) == 4 do
+    Enum.reverse(translated_list)
   end
+
+  defp reversal(translated_list, _binary_digits), do: translated_list
 end
