@@ -1,5 +1,5 @@
 defmodule SecretHandshake do
-  @spec commands(code :: integer) :: list(String.t())
+  @spec commands(code :: integer) :: [String.t()]
   def commands(code) do
     binary_digits = Integer.digits(code, 2)
 
@@ -22,7 +22,7 @@ defmodule SecretHandshake do
   defp translate(position) when position == 4, do: "jump"
   defp translate(_position), do: nil
 
-  @spec reversal(list(String.t()), list(0 | 1)) :: list(String.t())
+  @spec reversal([String.t()], [0 | 1]) :: [String.t()]
   defp reversal(translated_list, [1 | tail]) when length(tail) == 4 do
     Enum.reverse(translated_list)
   end
