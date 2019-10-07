@@ -11,8 +11,6 @@ defmodule RobotSimulator do
 
   @doc """
   Create a Robot Simulator given an initial direction and position.
-
-  Valid directions are: `:north`, `:east`, `:south`, `:west`
   """
   @spec create(direction :: direction(), position :: position()) :: robot()
   def create(direction \\ :north, position \\ {0, 0})
@@ -24,8 +22,7 @@ defmodule RobotSimulator do
   def create(direction, {x, y}) when is_integer(x) and is_integer(y) do
     %{
       direction: direction,
-      x: x,
-      y: y
+      position: {x, y}
     }
   end
 
@@ -53,51 +50,50 @@ defmodule RobotSimulator do
   @spec run_simulation_step(letter :: String.t(), robot :: robot()) :: robot()
   def run_simulation_step(letter, robot) do
     case letter do
-      "A" -> %{robot | position: change_position(robot)}
-      "L" -> %{robot | direction: change_direction(robot, "L")}
-      "R" -> %{robot | direction: change_direction(robot, "R")}
+      "A" -> %{robot | position: change_position(robot[:direction], robot[:position])}
+      "L" -> %{robot | direction: change_direction(robot[:direction], "L")}
+      "R" -> %{robot | direction: change_direction(robot[:direction], "R")}
     end
   end
 
-  @spec change_direction(robot :: robot(), letter :: String.t()) :: direction()
-  def change_direction(robot, "L") do
+  @spec change_direction(direction :: direction(), letter :: String.t()) :: direction()
+  def change_direction(direction, "L") do
     @valid_directions
     |> Enum.reverse()
     |> Stream.cycle()
-    |> Stream.drop_while(&(&1 != robot[:direction]))
+    |> Stream.drop_while(&(&1 != direction))
     |> Stream.take(2)
     |> Enum.to_list()
     |> Enum.at(1)
   end
 
-  def change_direction(robot, "R") do
+  def change_direction(direction, "R") do
     @valid_directions
     |> Stream.cycle()
-    |> Stream.drop_while(&(&1 != robot[:direction]))
+    |> Stream.drop_while(&(&1 != direction))
     |> Stream.take(2)
     |> Enum.to_list()
     |> Enum.at(1)
   end
 
-  @spec change_position(robot :: robot()) :: position()
-  def change_position(robot) do
-    robot[:position]
-  end
+  @spec change_position(direction :: direction(), position :: position()) :: position()
+  def change_position(:north, {x, y}), do: {x, y + 1}
+  def change_position(:east, {x, y}), do: {x + 1, y}
+  def change_position(:south, {x, y}), do: {x, y - 1}
+  def change_position(:west, {x, y}), do: {x - 1, y}
 
   @doc """
   Return the robot's direction.
-
-  Valid directions are: `:north`, `:east`, `:south`, `:west`
   """
   @spec direction(robot :: robot()) :: direction()
   def direction(%{direction: :north}), do: :north
-  def direction(%{direction: :south}), do: :south
   def direction(%{direction: :east}), do: :east
+  def direction(%{direction: :south}), do: :south
   def direction(%{direction: :west}), do: :west
 
   @doc """
   Return the robot's position.
   """
   @spec position(robot :: robot()) :: position()
-  def position(%{x: x, y: y}), do: {x, y}
+  def position(%{position: {x, y}}), do: {x, y}
 end
