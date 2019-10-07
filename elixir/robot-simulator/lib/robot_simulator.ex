@@ -1,5 +1,5 @@
 defmodule Robot do
-  # @enforce_keys: [:direction, :position]
+  @enforce_keys [:direction, :position]
   defstruct [:direction, :position]
 end
 
