@@ -14,7 +14,7 @@ defmodule RobotSimulator do
 
   Valid directions are: `:north`, `:east`, `:south`, `:west`
   """
-  @spec create(direction :: atom, position :: position()) :: robot()
+  @spec create(direction :: direction(), position :: position()) :: robot()
   def create(direction \\ :north, position \\ {0, 0})
 
   def create(direction, _position) when direction not in @valid_directions do
@@ -50,14 +50,16 @@ defmodule RobotSimulator do
     end
   end
 
+  @spec run_simulation_step(letter :: String.t(), robot :: robot()) :: robot()
   def run_simulation_step(letter, robot) do
     case letter do
-      "A" -> robot
+      "A" -> %{robot | position: change_position(robot)}
       "L" -> %{robot | direction: change_direction(robot, "L")}
       "R" -> %{robot | direction: change_direction(robot, "R")}
     end
   end
 
+  @spec change_direction(robot :: robot(), letter :: String.t()) :: direction()
   def change_direction(robot, "L") do
     @valid_directions
     |> Enum.reverse()
@@ -77,7 +79,9 @@ defmodule RobotSimulator do
     |> Enum.at(1)
   end
 
-  def change_position(current_position) do
+  @spec change_position(robot :: robot()) :: position()
+  def change_position(robot) do
+    robot[:position]
   end
 
   @doc """
