@@ -6,6 +6,7 @@ defmodule RobotSimulator do
   @type robot :: %{direction: direction(), position: position()}
 
   # Valid Options
+
   @valid_directions [:north, :east, :south, :west]
   @valid_instructions ["A", "L", "R"]
 
@@ -62,8 +63,7 @@ defmodule RobotSimulator do
     |> Enum.reverse()
     |> Stream.cycle()
     |> Stream.drop_while(&(&1 != direction))
-    |> Stream.take(2)
-    |> Enum.to_list()
+    |> Enum.take(2)
     |> Enum.at(1)
   end
 
@@ -71,8 +71,7 @@ defmodule RobotSimulator do
     @valid_directions
     |> Stream.cycle()
     |> Stream.drop_while(&(&1 != direction))
-    |> Stream.take(2)
-    |> Enum.to_list()
+    |> Enum.take(2)
     |> Enum.at(1)
   end
 
