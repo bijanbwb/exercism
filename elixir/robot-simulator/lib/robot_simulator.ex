@@ -3,7 +3,7 @@ defmodule RobotSimulator do
 
   @type direction :: :north | :east | :south | :west
   @type position :: {integer, integer}
-  @type robot :: %{direction: direction(), x: integer(), y: integer()}
+  @type robot :: %{direction: direction(), position: position()}
 
   # Valid Options
   @valid_directions [:north, :east, :south, :west]
@@ -12,7 +12,7 @@ defmodule RobotSimulator do
   @doc """
   Create a Robot Simulator given an initial direction and position.
   """
-  @spec create(direction :: direction(), position :: position()) :: robot()
+  @spec create(direction :: direction(), position :: position()) :: robot() | {:error, String.t()}
   def create(direction \\ :north, position \\ {0, 0})
 
   def create(direction, _position) when direction not in @valid_directions do
