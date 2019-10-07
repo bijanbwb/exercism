@@ -1,9 +1,16 @@
+defmodule Robot do
+  # @enforce_keys: [:direction, :position]
+  defstruct [:direction, :position]
+end
+
 defmodule RobotSimulator do
+  alias Robot
+
   # Types
 
   @type direction :: :north | :east | :south | :west
   @type position :: {integer, integer}
-  @type robot :: %{direction: direction(), position: position()}
+  @type robot :: %Robot{direction: direction(), position: position()}
 
   # Valid Options
 
@@ -21,7 +28,7 @@ defmodule RobotSimulator do
   end
 
   def create(direction, {x, y}) when is_integer(x) and is_integer(y) do
-    %{
+    %Robot{
       direction: direction,
       position: {x, y}
     }
@@ -51,14 +58,14 @@ defmodule RobotSimulator do
   @spec run_simulation_step(letter :: String.t(), robot :: robot()) :: robot()
   def run_simulation_step(letter, robot) do
     case letter do
-      "A" -> %{robot | position: change_position(robot[:direction], robot[:position])}
-      "L" -> %{robot | direction: change_direction(robot[:direction], "L")}
-      "R" -> %{robot | direction: change_direction(robot[:direction], "R")}
+      "A" -> %Robot{robot | position: change_position(robot)}
+      "L" -> %Robot{robot | direction: change_direction(robot, "L")}
+      "R" -> %Robot{robot | direction: change_direction(robot, "R")}
     end
   end
 
-  @spec change_direction(direction :: direction(), letter :: String.t()) :: direction()
-  def change_direction(direction, "L") do
+  @spec change_direction(robot :: robot(), letter :: String.t()) :: direction()
+  def change_direction(%Robot{direction: direction}, "L") do
     @valid_directions
     |> Enum.reverse()
     |> Stream.cycle()
@@ -67,7 +74,7 @@ defmodule RobotSimulator do
     |> Enum.at(1)
   end
 
-  def change_direction(direction, "R") do
+  def change_direction(%Robot{direction: direction}, "R") do
     @valid_directions
     |> Stream.cycle()
     |> Stream.drop_while(&(&1 != direction))
@@ -75,11 +82,11 @@ defmodule RobotSimulator do
     |> Enum.at(1)
   end
 
-  @spec change_position(direction :: direction(), position :: position()) :: position()
-  def change_position(:north, {x, y}), do: {x, y + 1}
-  def change_position(:east, {x, y}), do: {x + 1, y}
-  def change_position(:south, {x, y}), do: {x, y - 1}
-  def change_position(:west, {x, y}), do: {x - 1, y}
+  @spec change_position(robot :: robot()) :: position()
+  def change_position(%Robot{direction: :north, position: {x, y}}), do: {x, y + 1}
+  def change_position(%Robot{direction: :east, position: {x, y}}), do: {x + 1, y}
+  def change_position(%Robot{direction: :south, position: {x, y}}), do: {x, y - 1}
+  def change_position(%Robot{direction: :west, position: {x, y}}), do: {x - 1, y}
 
   @doc """
   Return the robot's direction.
