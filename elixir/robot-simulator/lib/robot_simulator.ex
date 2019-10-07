@@ -1,5 +1,6 @@
 defmodule RobotSimulator do
-  @type direction :: :north | :south | :east | :west
+  @directions [:north, :east, :south, :west]
+  @type direction :: :north | :east | :south | :west
   @type position :: {integer, integer}
   @type robot :: %{direction: direction(), x: integer(), y: integer()}
 
@@ -11,7 +12,7 @@ defmodule RobotSimulator do
   @spec create(direction :: atom, position :: position()) :: robot()
   def create(direction \\ :north, position \\ {0, 0})
 
-  def create(direction, _position) when direction not in [:north, :south, :east, :west] do
+  def create(direction, _position) when direction not in @directions do
     {:error, "invalid direction"}
   end
 
@@ -34,6 +35,43 @@ defmodule RobotSimulator do
   """
   @spec simulate(robot :: robot(), instructions :: String.t()) :: robot()
   def simulate(robot, instructions) do
+    instructions
+    |> String.graphemes()
+    |> Enum.all?(&(&1 in ["A", "L", "R"]))
+    |> case do
+      true -> Enum.reduce(instructions, robot, &run_simulation_step/2)
+      false -> {:error, "invalid instruction"}
+    end
+  end
+
+  def run_simulation_step(letter, robot) do
+    case letter do
+      "A" -> robot
+      "L" -> %{robot | direction: change_direction(robot, "L")}
+      "R" -> %{robot | direction: change_direction(robot, "R")}
+    end
+  end
+
+  def change_direction(robot, "L") do
+    @directions
+    |> Enum.reverse()
+    |> Stream.cycle()
+    |> Stream.drop_while(&(&1 != robot[:direction]))
+    |> Stream.take(2)
+    |> Enum.to_list()
+    |> Enum.at(1)
+  end
+
+  def change_direction(robot, "R") do
+    @directions
+    |> Stream.cycle()
+    |> Stream.drop_while(&(&1 != robot[:direction]))
+    |> Stream.take(2)
+    |> Enum.to_list()
+    |> Enum.at(1)
+  end
+
+  def change_position(current_position) do
   end
 
   @doc """
