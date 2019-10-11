@@ -54,28 +54,24 @@ defmodule RobotSimulator do
   end
 
   @spec run_simulation_step(instruction(), robot()) :: robot()
-  def run_simulation_step(?A, %Robot{} = robot),
-    do: %Robot{robot | position: change_position(robot)}
+  def run_simulation_step(?A, %Robot{} = robot), do: change_position(robot)
+  def run_simulation_step(letter, %Robot{} = robot), do: change_direction(robot, letter)
 
-  def run_simulation_step(letter, %Robot{} = robot) do
-    %Robot{robot | direction: change_direction(robot, letter)}
-  end
+  @spec change_position(robot()) :: robot()
+  def change_position(%Robot{direction: :north, position: {x, y}} = robot), do: %Robot{robot | position: {x, y + 1}}
+  def change_position(%Robot{direction: :east, position: {x, y}} = robot), do: %Robot{robot | position: {x + 1, y}}
+  def change_position(%Robot{direction: :south, position: {x, y}} = robot), do: %Robot{robot | position: {x, y - 1}}
+  def change_position(%Robot{direction: :west, position: {x, y}} = robot), do: %Robot{robot | position: {x - 1, y}}
 
-  @spec change_direction(robot(), instruction()) :: direction()
-  def change_direction(%Robot{direction: :north}, ?L), do: :west
-  def change_direction(%Robot{direction: :east}, ?L), do: :north
-  def change_direction(%Robot{direction: :south}, ?L), do: :east
-  def change_direction(%Robot{direction: :west}, ?L), do: :south
-  def change_direction(%Robot{direction: :north}, ?R), do: :east
-  def change_direction(%Robot{direction: :east}, ?R), do: :south
-  def change_direction(%Robot{direction: :south}, ?R), do: :west
-  def change_direction(%Robot{direction: :west}, ?R), do: :north
-
-  @spec change_position(robot()) :: position()
-  def change_position(%Robot{direction: :north, position: {x, y}}), do: {x, y + 1}
-  def change_position(%Robot{direction: :east, position: {x, y}}), do: {x + 1, y}
-  def change_position(%Robot{direction: :south, position: {x, y}}), do: {x, y - 1}
-  def change_position(%Robot{direction: :west, position: {x, y}}), do: {x - 1, y}
+  @spec change_direction(robot(), instruction()) :: robot()
+  def change_direction(%Robot{direction: :north} = robot, ?L), do: %Robot{robot | direction: :west}
+  def change_direction(%Robot{direction: :east} = robot, ?L), do: %Robot{robot | direction: :north}
+  def change_direction(%Robot{direction: :south} = robot, ?L), do: %Robot{robot | direction: :east}
+  def change_direction(%Robot{direction: :west} = robot, ?L), do: %Robot{robot | direction: :south}
+  def change_direction(%Robot{direction: :north} = robot, ?R), do: %Robot{robot | direction: :east}
+  def change_direction(%Robot{direction: :east} = robot, ?R), do: %Robot{robot | direction: :south}
+  def change_direction(%Robot{direction: :south} = robot, ?R), do: %Robot{robot | direction: :west}
+  def change_direction(%Robot{direction: :west} = robot, ?R), do: %Robot{robot | direction: :north}
 
   @doc """
   Return the robot's direction.
