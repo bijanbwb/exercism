@@ -1,11 +1,11 @@
 defmodule Robot do
   @enforce_keys [:direction, :position]
-  defstruct direction: :north, position: {0, 0}
+  defstruct [:direction, :position]
 end
 
 defmodule RobotSimulator do
   @type direction :: :north | :east | :south | :west
-  @type position :: {integer, integer}
+  @type position :: {integer(), integer()}
   @type robot :: %Robot{direction: direction(), position: position()}
 
   @valid_directions [:north, :east, :south, :west]
@@ -13,6 +13,11 @@ defmodule RobotSimulator do
 
   defguard is_direction(direction) when direction in @valid_directions
   defguard is_instruction(instruction) when instruction in @valid_instructions
+  defguard is_position(position)
+    when is_tuple(position)
+    and tuple_size(position) == 2
+    and elem(position, 0) |> is_integer()
+    and elem(position, 1) |> is_integer()
 
   @doc """
   Create a Robot Simulator given an initial direction and position.
@@ -23,8 +28,8 @@ defmodule RobotSimulator do
   def create(direction, _position) when not is_direction(direction),
     do: {:error, "invalid direction"}
 
-  def create(direction, {x, y}) when is_integer(x) and is_integer(y),
-    do: %Robot{direction: direction, position: {x, y}}
+  def create(direction, position) when is_position(position),
+    do: %Robot{direction: direction, position: position}
 
   def create(_direction, _position), do: {:error, "invalid position"}
 
@@ -72,14 +77,11 @@ defmodule RobotSimulator do
   Return the robot's direction.
   """
   @spec direction(robot()) :: direction()
-  def direction(%Robot{direction: :north} = robot), do: robot.direction
-  def direction(%Robot{direction: :east} = robot), do: robot.direction
-  def direction(%Robot{direction: :south} = robot), do: robot.direction
-  def direction(%Robot{direction: :west} = robot), do: robot.direction
+  def direction(%Robot{} = robot), do: robot.direction
 
   @doc """
   Return the robot's position.
   """
   @spec position(robot()) :: position()
-  def position(%Robot{position: _position} = robot), do: robot.position
+  def position(%Robot{} = robot), do: robot.position
 end
