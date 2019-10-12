@@ -1,6 +1,6 @@
 defmodule Robot do
   @enforce_keys [:direction, :position]
-  defstruct [:direction, :position]
+  defstruct direction: :north, position: {0, 0}
 end
 
 defmodule RobotSimulator do
@@ -24,10 +24,7 @@ defmodule RobotSimulator do
     do: {:error, "invalid direction"}
 
   def create(direction, {x, y}) when is_integer(x) and is_integer(y),
-    do: %Robot{
-      direction: direction,
-      position: {x, y}
-    }
+    do: %Robot{direction: direction, position: {x, y}}
 
   def create(_direction, _position), do: {:error, "invalid position"}
 
@@ -56,55 +53,33 @@ defmodule RobotSimulator do
     do: {:halt, {:error, "invalid instruction"}}
 
   @spec change_position(robot()) :: robot()
-  def change_position(%Robot{direction: :north, position: {x, y}} = robot),
-    do: %Robot{robot | position: {x, y + 1}}
-
-  def change_position(%Robot{direction: :east, position: {x, y}} = robot),
-    do: %Robot{robot | position: {x + 1, y}}
-
-  def change_position(%Robot{direction: :south, position: {x, y}} = robot),
-    do: %Robot{robot | position: {x, y - 1}}
-
-  def change_position(%Robot{direction: :west, position: {x, y}} = robot),
-    do: %Robot{robot | position: {x - 1, y}}
+  def change_position(%Robot{direction: :north, position: {x, y}} = robot), do: %Robot{robot | position: {x, y + 1}}
+  def change_position(%Robot{direction: :east, position: {x, y}} = robot), do: %Robot{robot | position: {x + 1, y}}
+  def change_position(%Robot{direction: :south, position: {x, y}} = robot), do: %Robot{robot | position: {x, y - 1}}
+  def change_position(%Robot{direction: :west, position: {x, y}} = robot), do: %Robot{robot | position: {x - 1, y}}
 
   @spec change_direction(robot(), String.t()) :: robot()
-  def change_direction(%Robot{direction: :north} = robot, "L"),
-    do: %Robot{robot | direction: :west}
-
-  def change_direction(%Robot{direction: :east} = robot, "L"),
-    do: %Robot{robot | direction: :north}
-
-  def change_direction(%Robot{direction: :south} = robot, "L"),
-    do: %Robot{robot | direction: :east}
-
-  def change_direction(%Robot{direction: :west} = robot, "L"),
-    do: %Robot{robot | direction: :south}
-
-  def change_direction(%Robot{direction: :north} = robot, "R"),
-    do: %Robot{robot | direction: :east}
-
-  def change_direction(%Robot{direction: :east} = robot, "R"),
-    do: %Robot{robot | direction: :south}
-
-  def change_direction(%Robot{direction: :south} = robot, "R"),
-    do: %Robot{robot | direction: :west}
-
-  def change_direction(%Robot{direction: :west} = robot, "R"),
-    do: %Robot{robot | direction: :north}
+  def change_direction(%Robot{direction: :north} = robot, "L"), do: %Robot{robot | direction: :west}
+  def change_direction(%Robot{direction: :east} = robot, "L"), do: %Robot{robot | direction: :north}
+  def change_direction(%Robot{direction: :south} = robot, "L"), do: %Robot{robot | direction: :east}
+  def change_direction(%Robot{direction: :west} = robot, "L"), do: %Robot{robot | direction: :south}
+  def change_direction(%Robot{direction: :north} = robot, "R"), do: %Robot{robot | direction: :east}
+  def change_direction(%Robot{direction: :east} = robot, "R"), do: %Robot{robot | direction: :south}
+  def change_direction(%Robot{direction: :south} = robot, "R"), do: %Robot{robot | direction: :west}
+  def change_direction(%Robot{direction: :west} = robot, "R"), do: %Robot{robot | direction: :north}
 
   @doc """
   Return the robot's direction.
   """
   @spec direction(robot()) :: direction()
-  def direction(%Robot{direction: :north}), do: :north
-  def direction(%Robot{direction: :east}), do: :east
-  def direction(%Robot{direction: :south}), do: :south
-  def direction(%Robot{direction: :west}), do: :west
+  def direction(%Robot{direction: :north} = robot), do: robot.direction
+  def direction(%Robot{direction: :east} = robot), do: robot.direction
+  def direction(%Robot{direction: :south} = robot), do: robot.direction
+  def direction(%Robot{direction: :west} = robot), do: robot.direction
 
   @doc """
   Return the robot's position.
   """
   @spec position(robot()) :: position()
-  def position(%Robot{position: {x, y}}), do: {x, y}
+  def position(%Robot{position: _position} = robot), do: robot.position
 end
