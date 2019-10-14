@@ -4,8 +4,9 @@ defmodule ListOps do
   def count([_head | tail]), do: 1 + count(tail)
 
   @spec reverse(list()) :: list()
-  def reverse([]), do: []
-  def reverse([head | tail]), do: reverse(tail) ++ [head]
+  def reverse(list), do: reverse(list, [])
+  defp reverse([], acc), do: acc
+  defp reverse([head | tail], acc), do: reverse(tail, [head | acc])
 
   @spec map(list(), (any() -> any())) :: list()
   def map([], _f), do: []
@@ -25,6 +26,8 @@ defmodule ListOps do
 
   @spec append(list(), list()) :: list()
   def append([], []), do: []
+  def append(a, []), do: a
+  def append([], b), do: b
   def append(a, b), do: a ++ b
 
   @spec concat([[any()]]) :: [any()]
