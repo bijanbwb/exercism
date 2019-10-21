@@ -28,9 +28,9 @@ defmodule ListOps do
   def append([], []), do: []
   def append(a, []), do: a
   def append([], b), do: b
-  def append(a, b), do: a ++ b
+  def append([head | tail], b), do: [head | append(tail, b)]
 
   @spec concat([[any()]]) :: [any()]
   def concat([]), do: []
-  def concat([head | tail]), do: head ++ concat(tail)
+  def concat([head | tail]), do: append(head, concat(tail))
 end
