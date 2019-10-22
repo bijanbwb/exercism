@@ -14,7 +14,7 @@ defmodule RotationalCipher do
     text
     |> String.codepoints()
     |> Enum.map(&(letter_to_number(&1) + shift))
-    |> Enum.map(&number_to_letter/1)
+    |> Enum.map(&number_to_letter(&1, shift))
     |> Enum.join()
   end
 
@@ -26,9 +26,19 @@ defmodule RotationalCipher do
     |> Map.get(letter)
   end
 
-  defp number_to_letter(number) do
-    @numbers
-    |> Enum.zip(String.codepoints(@letters))
+  defp number_to_letter(number, shift) do
+    upper_bound = 26 + shift
+
+    numbers = 1..upper_bound
+
+    letters =
+      "abcdefghijklmnopqrstuvwxyz"
+      |> String.codepoints()
+      |> Stream.cycle()
+      |> Enum.take(upper_bound)
+
+    numbers
+    |> Enum.zip(letters)
     |> Enum.into(%{})
     |> Map.get(number)
   end
